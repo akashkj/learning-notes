@@ -75,6 +75,17 @@ Following are the attributes defined in a workflow:
       - It is an optional field
   
 
+### Adding dependencies between Actions
+- By default, jobs run in parallel
+- A dependency can be added from one job to another in order to run them sequentially
+- **needs**
+  - An attribute used to define dependency of a job
+  - It defines one or more jobs that must be completed successfully before current job is triggered
+  - Example: Job 3 needs to run after Job 1 and Job 2 are executed
+  - ![Jobs dependency](https://github.com/akashkj/learning-notes/blob/github-actions/jobs.png)
+  
+### Add conditions to a workflow
+- 
 
 
 Reference: [Linkedin: Learning Github Actions](https://www.linkedin.com/learning/learning-github-actions-2)

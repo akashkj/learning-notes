@@ -20,9 +20,41 @@
 - If you examine, there will be steps for printing single line and multi-line messages, that were defined in the job earlier
 
 ### Attributes
+![Sample workflow](https://github.com/akashkj/learning-notes/blob/github-actions/sample_workflow.png)
+
 Following are the attributes defined in a workflow:
-1. name - To provide name of the workflow. It is helpful when there are multiple workflows in singel repository.
-2. 
+- **name** 
+  - To provide name of the workflow
+  - It is helpful when there are multiple workflows in singel repository
+  - Optional field.
+- **on** 
+  - Defines an event that will trigger the workflow. 
+  - It is a required attribute. E.g. push, pull_request, release
+  - Webhooks can also be defined to trigger a workflow. These are not directly related to code change but are associted with repo. E.g. branch creation/deleteion, issues opened/resolved, members join/leave a project
+  - Workflows can also be scheduled to trigger using various methods such as cron format
+- **jobs** 
+  - There must be at least one job defined for a workflow
+  - Each job is identified by a string identifier
+  - Job name can have only alphanumeric, dashes or underscores. It must start with a letter or a underscore.
+  - **runs-on** 
+    - Specify the type of machine needed to run the job. E.g. Windows Server 2019, Ubuntu 18.04, Ubuntu 16.04, macOS Catalina 10.15, etc.
+    - Self hosted runners can also be used instead
+  - **steps**
+    - Defines the list of actions or commands to be run into the environment defined in previous attribute
+    - Each step has access to the environment file system and runs in its own process
+    - **uses**
+      - Specify an action to be used by the job
+      - Actions are a collection of code used to perform a specific task or operation
+      - Actions are docker images
+      - This tag tells workflow how to find the action needed by the step
+      - Actions can be specified from the same repository or from another public github repository
+    - **run**
+      - Alternative of using action for a step
+      - It executes a command or a series of commands in a shell on the virtual environment
+    - **name**
+      - Used in conjunction with uses and runs command to identify a step
+      - It is an optional field
+  
 
 
 

@@ -137,8 +137,41 @@ on:
           ref: master
           path: ./tomcat
   ```
+- Using environment variables
+  - Case sensitive key-value pairs that are injected during runtime in virtual environment
+  - [Default environment variables defined by github](https://docs.github.com/en/free-pro-team@latest/actions/reference/environment-variables#default-environment-variables) These env. variables are available to every step of the workflow.
+  - To inject custom environment variables, use **env** attribute
+  - Scope of custom variables can be workflow, job or step based on where it is defined
+  - Accessed using:
+    - Shell variable syntax:
+      - Example, for bash: ```$VARIABLE_NAME```
+      - Example, for powershell: ```$Env:VARIABLE_NAME```
+    - YAML Syntax
+      - Syntax: ```${{ env.VARIABLE_NAME }}```
+      - Variable is read from the workflow
+      - Variabes can be used in workflow configuration also
+      - Variables defined at the step level can't be used in that step
+- Using secrets
+  - Used to store environment variables in encrypted format
+  - Can be defined in the repository where workflow is defined
+  - Step: Settings > Secrets > Add a secret
+  - Access using: ```${{ secrets.SECRET_NAME }}```
+  - Limits:
+    - Can't be viewed, once created
+    - A workflow cna have up to 100 secrets
+    - Size limit of 64 KB. For a larger secret, it can be stored as a file in exrypted format and its decryption key can be passed as a secret to workflow.
+    - Must be explicity passed to a step or action, they are not available by default.
+- Using artifacts
+  - Created using data preserved from a workflow
+  - It can be a file or a collection of files such as comiled binaries, archives, test results, log files, etc.
+  - Can be used as a shared data between workflow jobs. E.g. Job 1 create and upload artifact and job 2 uses that artifact
+  - An artifact can only be uploaded by a workflow ```actions/upload-artifact```
+  - An artifct can only be downloaded by a workflow ```actions/download-artifact```
+  - Artifact can also be downloaded manually afte workflow is completed
+  - Free github account has a limit of 500 MB storage for artifacts with a retention period of 90 days
 
 
 
-
-Reference: [Linkedin: Learning Github Actions](https://www.linkedin.com/learning/learning-github-actions-2)
+#### References: 
+- [Linkedin: Learning Github Actions](https://www.linkedin.com/learning/learning-github-actions-2)
+- [Github Actions Documentation](https://docs.github.com/en/free-pro-team@latest/actions)

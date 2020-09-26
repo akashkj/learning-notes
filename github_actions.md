@@ -32,6 +32,7 @@ Following are the attributes defined in a workflow:
   - It is a required attribute. E.g. push, pull_request, release
   - Webhooks can also be defined to trigger a workflow. These are not directly related to code change but are associted with repo. E.g. branch creation/deleteion, issues opened/resolved, members join/leave a project
   - Workflows can also be scheduled to trigger using various methods such as cron format
+  - [https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows](List of all the supported events)
 - **jobs** 
   - There must be at least one job defined for a workflow
   - Each job is identified by a string identifier

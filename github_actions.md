@@ -35,23 +35,41 @@ Following are the attributes defined in a workflow:
   - [List of supported events](https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows)
 - **jobs** 
   - There must be at least one job defined for a workflow
-  - Each job is identified by a string identifier
-  - Job name can have only alphanumeric, dashes or underscores. It must start with a letter or a underscore.
+  - Each job is identified by a string identifier i.e. a job name
+  - Job name can have only alphanumeric, dashes or underscores. It must start with a letter or a underscore
+  - Jobs run in parallel by default, with an option to execute them sequentially
   - **runs-on** 
     - Specify the type of machine needed to run the job. E.g. Windows Server 2019, Ubuntu 18.04, Ubuntu 16.04, macOS Catalina 10.15, etc.
     - Self hosted runners can also be used instead
+    - Each job can be run on a different runner
+    - [Supported runners](https://docs.github.com/en/free-pro-team@latest/actions/reference/specifications-for-github-hosted-runners#supported-runners-and-hardware-resources)
   - **steps**
     - Defines the list of actions or commands to be run into the environment defined in previous attribute
-    - Each step has access to the environment file system and runs in its own process
+    - Each step has access to the environment file system
+    - Each step run in its own process
     - **uses**
       - Specify an action to be used by the job
       - Actions are a collection of code used to perform a specific task or operation
       - Actions are docker images
       - This tag tells workflow how to find the action needed by the step
-      - Actions can be specified from the same repository or from another public github repository
+      - Actions can be specified from:
+        - Same repository
+          - Syntax: ./path/to/action
+          - Example: uses: ./.github/actions/some-action
+        - Another public github repository
+          - Syntax: {owner}/{repo}@{ref}
+          - Example: uses: monacorp/action-name@master
+        - A docker image registry
+          - Syntax: docker://{image}:{tag}
+          - Example: uses: docker://heloo-world:latest
     - **run**
       - Alternative of using action for a step
       - It executes a command or a series of commands in a shell on the virtual environment
+      - Single line command
+        - Syntax: {command} {parameters} {arguments}
+        - Example: run: mv ./output ./archive
+      - Multi line command
+      ![Multi line command](https://github.com/akashkj/learning-notes/blob/github-actions/command.png)
     - **name**
       - Used in conjunction with uses and runs command to identify a step
       - It is an optional field

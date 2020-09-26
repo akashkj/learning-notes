@@ -53,15 +53,16 @@ Following are the attributes defined in a workflow:
       - Actions are docker images
       - This tag tells workflow how to find the action needed by the step
       - Actions can be specified from:
+        - Github marketplace
         - Same repository
           - Syntax: ./path/to/action
-          - Example: uses: ./.github/actions/some-action
+          - Example: ```uses: ./.github/actions/some-action```
         - Another public github repository
           - Syntax: {owner}/{repo}@{ref}
-          - Example: uses: monacorp/action-name@master
+          - Example: ```uses: monacorp/action-name@master```
         - A docker image registry
           - Syntax: docker://{image}:{tag}
-          - Example: uses: docker://heloo-world:latest
+          - Example: ```uses: docker://heloo-world:latest```
     - **run**
       - Alternative of using action for a step
       - It executes a command or a series of commands in a shell on the virtual environment
@@ -85,7 +86,59 @@ Following are the attributes defined in a workflow:
   - ![Jobs dependency](https://github.com/akashkj/learning-notes/blob/github-actions/jobs.png)
   
 ### Add conditions to a workflow
-- 
+- We can define different trigger conditions of a workflow
+- E.g. When we want to have different trigger events for different branches
+```
+on:
+   push:
+      branches:
+         - develop
+         - master
+   pull_request:
+      branches:
+         - master
+```
+
+
+### Workflow and Action Limitations
+- A repository can have maximum of 20 workflows running concurrently, with no limit on no. of workflows
+- Concurrency limit is higher on upgraded github plans
+- A job can have maximum runtime of 6 hours
+- A job can make maximum of 1000 requests per hour to github's API
+- Actions can't trigger other workflows
+- Action log files can be of maximum 64 KB
+
+
+### Actions
+- From marketplace
+  - When editing/adding a workflow, marketplace pane ia available that lists various Actions offered by github
+  ![Marketplace](https://github.com/akashkj/learning-notes/blob/github-actions/images/marketplace.png)
+- From a repository. Can be:
+  - Self repo
+  - Another repo
+  - Docker image registry
+- Passing arguments to an action
+  - **with** attribute is used to pass arguments to an action
+  - Creates a new block for mapping arguments to input
+  - Syntax:
+  ```
+  uses: {repo}/{action-name}
+  with:
+        key:value
+        key:value
+  ```
+  - Example - passing arguement to github's checkout action that checks out code from a github location. If these arguements are not provided, checkout action checks out the current reposiroty code, where action is running.
+  ```
+  steps:
+     - name: Checkout the code
+       uses: actions/checkout@v2
+       with:
+          repository: apache/tomcat
+          ref: master
+          path: ./tomcat
+  ```
+
+
 
 
 Reference: [Linkedin: Learning Github Actions](https://www.linkedin.com/learning/learning-github-actions-2)

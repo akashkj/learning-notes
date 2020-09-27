@@ -20,7 +20,7 @@
 - If you examine, there will be steps for printing single line and multi-line messages, that were defined in the job earlier
 
 ### Attributes
-![Sample workflow](https://github.com/akashkj/learning-notes/blob/github-actions/sample_workflow.png)
+![Sample workflow](https://github.com/akashkj/learning-notes/blob/github-actions/image/sample_workflow.png)
 
 Following are the attributes defined in a workflow:
 - **name** 
@@ -70,7 +70,7 @@ Following are the attributes defined in a workflow:
         - Syntax: {command} {parameters} {arguments}
         - Example: run: mv ./output ./archive
       - Multi line command
-      ![Multi line command](https://github.com/akashkj/learning-notes/blob/github-actions/command.png)
+      ![Multi line command](https://github.com/akashkj/learning-notes/blob/github-actions/images/command.png)
     - **name**
       - Used in conjunction with uses and runs command to identify a step
       - It is an optional field
@@ -83,7 +83,7 @@ Following are the attributes defined in a workflow:
   - An attribute used to define dependency of a job
   - It defines one or more jobs that must be completed successfully before current job is triggered
   - Example: Job 3 needs to run after Job 1 and Job 2 are executed
-  - ![Jobs dependency](https://github.com/akashkj/learning-notes/blob/github-actions/jobs.png)
+  - ![Jobs dependency](https://github.com/akashkj/learning-notes/blob/github-actions/images/jobs.png)
   
 ### Add conditions to a workflow
 - We can define different trigger conditions of a workflow

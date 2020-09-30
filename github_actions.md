@@ -169,8 +169,76 @@ on:
   - An artifct can only be downloaded by a workflow ```actions/download-artifact```
   - Artifact can also be downloaded manually afte workflow is completed
   - Free github account has a limit of 500 MB storage for artifacts with a retention period of 90 days
-
-
+  
+  
+### Developing a CI worflow
+Following steps can be used to define a decent workflow for continous integration of a project. Different jobs can be defined to accomodate these steps.
+- Linting
+```
+- name: Lint code
+  run: |
+     flake8 --ignore=E501,E231 *.py
+     pylint --disable=C0301 --disable=C0326 *.py
+```
+- Unit tests
+```
+- name: Run unit tests
+  run: |
+     python -m unitest --verbose --failfast
+```
+- Building and managing artifacts
+Here we are using Google Cloud Platform to build and push the image, by utilizing secrets.
+```
+- name: Setup GCloud
+  uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+  with:
+     version: '274.0.1'
+     service_account_email: ${{ secrets.GCP_PROJECT_ID }}
+     service_account_key: ${{ secrets.GCP_SERVICE_ACCT_KEY }}
+- run: |
+     gloud config set project ${{ secrets.GCP_PROJECT_ID }}
+     gloud config set run/region ${{ secrets.GCP_REGION }}
+     gcloud auth configure-docker
+     gcloud info
+     
+- name: Build and tag image
+  run: docker build -t "gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest" .
+  
+- name: Push to GCP image registry
+  run: docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest
+```
+- Testing
+```
+test_image:
+   needs: [build_image] # Adding dependency on build image job to ensure testing is done only after image is successfully built
+   runs-on: ubuntu-18.04
+   steps:
+   - name: Setup GCloud
+     # Use the same process as done above to setup GCloud account access
+     
+   - name: run unit tests in container
+     run: docker run "gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest" -m unittest --verbose --failfast   
+```
+- Deployment
+```
+deploy:
+   needs: [test_image]
+   runs-on: ubuntu-18.04
+   steps:
+   - name: Setup GCloud
+     # Use the same process as done above to setup GCloud account access
+     
+   - name: Deploy to Cloud Run
+     run: gcloud run deploy ${{ env.APPLICATION_NAME }} --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.APPLICATION_NAME }}:latest
+     
+   - name: Test Deployment
+     run: |
+        DEPLOY_URL=$(gcloud run services describe app2 --platform=managed --region=us-central1 | grep https)
+        curl -sL --max-time 300 -o /dev/null -w "%{http_code}" $DEPLOY_URL | grep 200 || exit 1
+```
+- Adding a status badge
+  - Added usually in the readme page to give brief stats of the CI
+  - Format: ``` https://github.com/<OWNER>/<REPOSITORY>/workflows/<WORKFLOW_NAME>/badge.svg ```
 
 #### References: 
 - [Linkedin: Learning Github Actions](https://www.linkedin.com/learning/learning-github-actions-2)

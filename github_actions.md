@@ -239,6 +239,30 @@ deploy:
 - Adding a status badge
   - Added usually in the readme page to give brief stats of the CI
   - Format: ``` https://github.com/<OWNER>/<REPOSITORY>/workflows/<WORKFLOW_NAME>/badge.svg ```
+  
+  
+## Creation of a Custom Action
+**Step 1: Defining an objective** 
+<br/>
+This example action will be used to create a release in github, using a keyword defined in the commit message
+
+**Step 2: Adding a Dockerfile**
+```
+FROM alpine
+
+RUN apk add --no-cache \
+        bash           \
+        httpie         \
+        jq &&          \
+        which bash &&  \
+        which http &&  \
+        which jq
+
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY sample_push_event.json /sample_push_event.json
+
+ENTRYPOINT ["entrypoint.sh"]
+```
 
 #### References: 
 - [Linkedin: Learning Github Actions](https://www.linkedin.com/learning/learning-github-actions-2)

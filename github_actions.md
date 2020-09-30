@@ -20,7 +20,7 @@
 - If you examine, there will be steps for printing single line and multi-line messages, that were defined in the job earlier
 
 ### Attributes
-![Sample workflow](https://github.com/akashkj/learning-notes/blob/github-actions/image/sample_workflow.png)
+![Sample workflow](https://github.com/akashkj/learning-notes/blob/github-actions/images/sample_workflow.png)
 
 Following are the attributes defined in a workflow:
 - **name** 

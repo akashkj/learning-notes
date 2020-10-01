@@ -263,6 +263,58 @@ COPY sample_push_event.json /sample_push_event.json
 
 ENTRYPOINT ["entrypoint.sh"]
 ```
+To create image, run:
+``` docker build --tag keyword-release . ```
+
+**Step 3: Adding an entry point script**
+<br>
+A shell script that looks for keyword 'FIXED', created at same level as docker file
+```
+#!/bin/bash
+set -e
+
+# if keyword is found
+if echo "$*" | grep -i -q FIXED;
+then
+    # do something
+    echo "Found keyword."
+# otherwise
+else
+    # exit gracefully
+    echo "Nothing to process."
+fi
+```
+
+**Step 4: Using runtime environment resources**
+<br>
+Multiple resources are available at runtime, such as:
+- Compute resources
+  - One virtual CPU
+  - Memory up to 3.75 GB
+- Local file system
+  - Read and write access
+  - Disk space up to 100 GB with access to
+    - /github/home
+    - /github/workspace
+- Environment variables - [List](https://docs.github.com/en/free-pro-team@latest/actions/reference/environment-variables#default-environment-variables)
+- Event payloads
+  - Many events are available to trigger the worklow.
+    - E.g. push, create branch, delete branch, pull request, etc.
+    - [Available Webhooks](https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows#webhook-events)
+  - Ech event has a different payload
+- Remote network connectivity, to connect to external APIs or package repositories
+
+**Step 5: Local testing of Action**
+Create a Makefile with content:
+```
+KEYWORD=FIXED
+run: build
+	docker run --rm keyword-release-action $(KEYWORD)
+build:
+	docker build --tag keyword-release-action .
+test:
+	./entrypoint.sh $(KEYWORD)
+```
 
 #### References: 
 - [Linkedin: Learning Github Actions](https://www.linkedin.com/learning/learning-github-actions-2)
